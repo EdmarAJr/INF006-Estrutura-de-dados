@@ -53,12 +53,12 @@ int main() {
     }
 
     while (fgets(line, sizeof(line), input) != NULL) {
-        char *token = strtok(line, ",");
+        char *token = strtok(line, " ");
         int count = 0;
         
         Ponto arrayPontos[MAX_POINTS], arrayPontosOrdenados[MAX_POINTS];
 
-        if (strcmp(token, "points") == 0) {
+        if (strcmp(token, "points ") == 0) {
             token = strtok(NULL, " ");
         }
 
@@ -87,13 +87,13 @@ int main() {
         printf("distance %.2f ", distance);
         printf("shortcut %.2f ", shortcut);    
 
-        fprintf(output, "points");
+        fprintf(output, "points ");
         for (int i = 0; i < count; i++) {    
             if (arrayPontosOrdenados[i].x == (int)arrayPontosOrdenados[i].x && arrayPontosOrdenados[i].y == (int)arrayPontosOrdenados[i].y) {
                 fprintf(output, "(%d, %d) ", (int)arrayPontosOrdenados[i].x, (int)arrayPontosOrdenados[i].y);
-            } else if (arrayPontosOrdenados[i].x == (int)arrayPontosOrdenados[i].x && arrayPontosOrdenados[i].y != (int)arrayPontosOrdenados[i].y) {
+            } else if (arrayPontosOrdenados[i].x != (float)arrayPontosOrdenados[i].x && arrayPontosOrdenados[i].y == (float)arrayPontosOrdenados[i].y) {
                 fprintf(output,"(%d, %.2f) ", (int)arrayPontosOrdenados[i].x, arrayPontosOrdenados[i].y);
-            } else if (arrayPontosOrdenados[i].x != (int)arrayPontosOrdenados[i].x && (int)arrayPontosOrdenados[i].y == (int)arrayPontosOrdenados[i].y) {
+            } else if (arrayPontosOrdenados[i].x != (float)arrayPontosOrdenados[i].x && (int)arrayPontosOrdenados[i].y == (int)arrayPontosOrdenados[i].y) {
                 fprintf(output,"(%.2f, %d) ", arrayPontosOrdenados[i].x, (int)arrayPontosOrdenados[i].y);
             } else {
                 fprintf(output,"(%.2f, %.2f) ", arrayPontosOrdenados[i].x, arrayPontosOrdenados[i].y);
