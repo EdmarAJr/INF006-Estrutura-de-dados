@@ -1,10 +1,40 @@
+/*************************************** 
+* Equipe: Deivisson Vinicius França de Jesus
+*         Edmar Amorim dos Santos Junior
+* 
+***************************************/
+
+/**
+ *  Considere as seguintes input e saída abaixo:
+ *                          L0Q2.in
+ *       maria 3.15 jose 4 8 −1 12.7 (−1,−1) julia (−0.5,−0.5) 74.5 3.15 
+         jose 4 8 −1 12.7 (8,2) carlos (−0.5,−0.5)
+ 
+ *                           L0Q2.out
+ *       str : jose julia maria int:−1 4 8 float :3.15 12.7 p:(−0.5,−0.5) (−1,−1)
+ *       str : carlos jose int:−1 4 8 float :3.15 12.7 74.5 p:(−0.5,−0.5) (8,2)
+ 
+ * Esta questão consiste em ler uma lista de valores contendo strings, inteiros, reais e pontos no espaço bidimensional. A saída consiste em ordenar de maneira crescente, as strings por ordem alfabética, os inteiros, os reais e por fim os pontos por ordem crescente em relação a suas distância Euclidianas em relação a origem, o ponto (0,0).
+ 
+ ** Observações
+ * Não faça Ctrl+C/Ctrl+V deste arquivo PDF no seu arquivo de input pois podem ocorrer erros.
+ * Cada ponto aparece separado (), números com parte decimal são representados usando o ponto final e não a vírgula.
+ * Sua resposta deve estar em um único arquivo chamado RL0Q2.[java, py, js, c, cpp, etc]
+ * Você deve ler o arquivo L0Q2.in e escrever o arquivo L0Q1.out no mesmo diretório onde estiver rodando seu código RL0Q2.[java, py, js, c, cpp, etc]
+ * Não deve ser usado nenhum recurso de ordenação da linguagem de programação de sua escolha
+ * Pode e vai haver mais de uma linha na estrada
+ * O número de linhas na input deve ser o mesmo da saída, ou seja cada linha da input produzirá uma linha na saída
+ * Os pontos podem ter coordenadas reais, ou seja o ponto (13.34,10.2) é um ponto válido para a input
+ * não existem dois espaços em branco seguidos
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
 
-#define MAX_ITEMS 100
+#define MAX_ITEMS 500
 #define MAX_STR_LEN 50
 
 typedef struct {
@@ -74,7 +104,7 @@ int main() {
         return 1;
     }
 
-    char line[255];
+    char line[1000];
     while (fgets(line, sizeof(line), input)) {
         char strings[MAX_ITEMS][MAX_STR_LEN];
         float reais[MAX_ITEMS];
@@ -110,23 +140,30 @@ int main() {
         ordenarIntegers(inteiros, countInt);
         ordenarFloats(reais, countReais);
         ordenarPontos(pontos, countPontos);
-
-        fprintf(output, "str:");
+        
+        fprintf(output, " str:");
         for (int i = 0; i < countStr; i++) fprintf(output, " %s", strings[i]);
         fprintf(output, " int:");
         for (int i = 0; i < countInt; i++) fprintf(output, " %d", inteiros[i]);
         fprintf(output, " float:");
         for (int i = 0; i < countReais; i++) fprintf(output, " %.2f", reais[i]);
         fprintf(output, " p:");
-        for (int i = 0; i < countPontos; i++) {            
+        for (int i = 0; i < countPontos; i++) { 
+            // printf("%.2f, ", pontos[i].x);           
+            // printf("%.2f\n", pontos[i].y);       
+
             if (pontos[i].x == (int)pontos[i].x && pontos[i].y == (int)pontos[i].y) {
                 fprintf(output, "(%d, %d) ", (int)pontos[i].x, (int)pontos[i].y);
+                //printf("Todos inteiros\n");
             } else if (pontos[i].x == (int)pontos[i].x && pontos[i].y == (float)pontos[i].y) {
                 fprintf(output,"(%d, %.2f) ", (int)pontos[i].x, pontos[i].y);
+                //printf("1 inteiro 2 real\n");
             } else if (pontos[i].x == (float)pontos[i].x && pontos[i].y == (int)pontos[i].y) {
                 fprintf(output,"(%.2f, %d) ", pontos[i].x, (int)pontos[i].y);
+                // printf("1 real 2 inteiro\n");
             } else {
                 fprintf(output,"(%.2f, %.2f) ", pontos[i].x, pontos[i].y);
+                // printf("Todos reais\n");
             }
         }
         fprintf(output, "\n");
