@@ -159,12 +159,12 @@ int main() {
         for (int i = 0; i < countPontos; i++) {
             if (pontos[i].x == (int)pontos[i].x && pontos[i].y == (int)pontos[i].y) {
                 fprintf(output, "(%d, %d) ", (int)pontos[i].x, (int)pontos[i].y);
-            } else if (pontos[i].x == (int)pontos[i].x && pontos[i].y != (int)pontos[i].y) {
+            } else if (pontos[i].x == (int)pontos[i].x && pontos[i].y == (float)pontos[i].y) {
                 if (fabs(pontos[i].y * 10 - (int)(pontos[i].y * 10)) < 0.1)
                     fprintf(output, "(%d, %.1f) ", (int)pontos[i].x, pontos[i].y);
                 else
                     fprintf(output, "(%d, %.2f) ", (int)pontos[i].x, pontos[i].y);
-            } else if (pontos[i].x != (int)pontos[i].x && pontos[i].y == (int)pontos[i].y) {
+            } else if (pontos[i].x == (float)pontos[i].x && pontos[i].y == (int)pontos[i].y) {
                 if (fabs(pontos[i].x * 10 - (int)(pontos[i].x * 10)) < 0.1)
                     fprintf(output, "(%.1f, %d) ", pontos[i].x, (int)pontos[i].y);
                 else
