@@ -143,31 +143,44 @@ int main() {
         
         fprintf(output, " str:");
         for (int i = 0; i < countStr; i++) fprintf(output, " %s", strings[i]);
+        
         fprintf(output, " int:");
         for (int i = 0; i < countInt; i++) fprintf(output, " %d", inteiros[i]);
+        
         fprintf(output, " float:");
-        for (int i = 0; i < countReais; i++) fprintf(output, " %.2f", reais[i]);
+        for (int i = 0; i < countReais; i++) {
+            if (fabs(reais[i] * 10 - (int)(reais[i] * 10)) < 0.1)
+                fprintf(output, " %.1f", reais[i]);
+            else
+                fprintf(output, " %.2f", reais[i]);
+        }  
+        
         fprintf(output, " p:");
-        for (int i = 0; i < countPontos; i++) { 
-            // printf("%.2f, ", pontos[i].x);           
-            // printf("%.2f\n", pontos[i].y);       
-
+        for (int i = 0; i < countPontos; i++) {
             if (pontos[i].x == (int)pontos[i].x && pontos[i].y == (int)pontos[i].y) {
                 fprintf(output, "(%d, %d) ", (int)pontos[i].x, (int)pontos[i].y);
-                //printf("Todos inteiros\n");
-            } else if (pontos[i].x == (int)pontos[i].x && pontos[i].y == (float)pontos[i].y) {
-                fprintf(output,"(%d, %.2f) ", (int)pontos[i].x, pontos[i].y);
-                //printf("1 inteiro 2 real\n");
-            } else if (pontos[i].x == (float)pontos[i].x && pontos[i].y == (int)pontos[i].y) {
-                fprintf(output,"(%.2f, %d) ", pontos[i].x, (int)pontos[i].y);
-                // printf("1 real 2 inteiro\n");
+            } else if (pontos[i].x == (int)pontos[i].x && pontos[i].y != (int)pontos[i].y) {
+                if (fabs(pontos[i].y * 10 - (int)(pontos[i].y * 10)) < 0.1)
+                    fprintf(output, "(%d, %.1f) ", (int)pontos[i].x, pontos[i].y);
+                else
+                    fprintf(output, "(%d, %.2f) ", (int)pontos[i].x, pontos[i].y);
+            } else if (pontos[i].x != (int)pontos[i].x && pontos[i].y == (int)pontos[i].y) {
+                if (fabs(pontos[i].x * 10 - (int)(pontos[i].x * 10)) < 0.1)
+                    fprintf(output, "(%.1f, %d) ", pontos[i].x, (int)pontos[i].y);
+                else
+                    fprintf(output, "(%.2f, %d) ", pontos[i].x, (int)pontos[i].y);
             } else {
-                fprintf(output,"(%.2f, %.2f) ", pontos[i].x, pontos[i].y);
-                // printf("Todos reais\n");
+                if (fabs(pontos[i].x * 10 - (int)(pontos[i].x * 10)) < 0.1 && fabs(pontos[i].y * 10 - (int)(pontos[i].y * 10)) < 0.1)
+                    fprintf(output, "(%.1f, %.1f) ", pontos[i].x, pontos[i].y);
+                else if (fabs(pontos[i].x * 10 - (int)(pontos[i].x * 10)) < 0.1)
+                    fprintf(output, "(%.1f, %.2f) ", pontos[i].x, pontos[i].y);
+                else if (fabs(pontos[i].y * 10 - (int)(pontos[i].y * 10)) < 0.1)
+                    fprintf(output, "(%.2f, %.1f) ", pontos[i].x, pontos[i].y);
+                else
+                    fprintf(output, "(%.2f, %.2f) ", pontos[i].x, pontos[i].y);
             }
         }
-        fprintf(output, "\n");
-    }
+        fprintf(output, "\n");    }
 
     fclose(input);
     fclose(output);
