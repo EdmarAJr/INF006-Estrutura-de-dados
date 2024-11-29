@@ -122,16 +122,35 @@ int main() {
         // printf("shortcut %.2f ", shortcut);    
 
         fprintf(output, "points ");
-        for (int i = 0; i < count; i++) {    
+        for (int i = 0; i < count; i++) {  
             if (arrayPontosOrdenados[i].x == (int)arrayPontosOrdenados[i].x && arrayPontosOrdenados[i].y == (int)arrayPontosOrdenados[i].y) {
+                // printf("Todos inteiros\n");
                 fprintf(output, "(%d, %d) ", (int)arrayPontosOrdenados[i].x, (int)arrayPontosOrdenados[i].y);
             } else if (arrayPontosOrdenados[i].x == (int)arrayPontosOrdenados[i].x && arrayPontosOrdenados[i].y == (float)arrayPontosOrdenados[i].y) {
-                fprintf(output,"(%d, %.2f) ", (int)arrayPontosOrdenados[i].x, arrayPontosOrdenados[i].y);
-            } else if (arrayPontosOrdenados[i].x == (float)arrayPontosOrdenados[i].x && (int)arrayPontosOrdenados[i].y == (int)arrayPontosOrdenados[i].y) {
-                fprintf(output,"(%.2f, %d) ", arrayPontosOrdenados[i].x, (int)arrayPontosOrdenados[i].y);
+                // printf("1 inteiro 2 real\n");
+                if (fabs(arrayPontosOrdenados[i].y * 10 - (int)(arrayPontosOrdenados[i].y * 10)) < 0.1)
+                    fprintf(output, "(%d, %.1f) ", (int)arrayPontosOrdenados[i].x, arrayPontosOrdenados[i].y);
+                else
+                    fprintf(output,"(%d, %.2f) ", (int)arrayPontosOrdenados[i].x, arrayPontosOrdenados[i].y);
+            } else if (arrayPontosOrdenados[i].x == (float)arrayPontosOrdenados[i].x && arrayPontosOrdenados[i].y == (int)arrayPontosOrdenados[i].y) {
+                // printf("1 real 2 inteiro\n");
+                if (fabs(arrayPontosOrdenados[i].x * 10 - (int)(arrayPontosOrdenados[i].x * 10)) < 0.1)
+                    fprintf(output, "(%.1f, %d) ", arrayPontosOrdenados[i].x, (int)arrayPontosOrdenados[i].y);
+                else
+                    fprintf(output,"(%.2f, %d) ", arrayPontosOrdenados[i].x, (int)arrayPontosOrdenados[i].y);
             } else {
-                fprintf(output,"(%.2f, %.2f) ", arrayPontosOrdenados[i].x, arrayPontosOrdenados[i].y);
+                // printf("Todos reais\n");
+                if (fabs(arrayPontosOrdenados[i].x * 10 - (int)(arrayPontosOrdenados[i].x * 10)) < 0.1 && fabs(arrayPontosOrdenados[i].y * 10 - (int)(arrayPontosOrdenados[i].y * 10)) < 0.1)
+                    fprintf(output, "(%.1f, %.1f) ", arrayPontosOrdenados[i].x, arrayPontosOrdenados[i].y);
+                else if (fabs(arrayPontosOrdenados[i].x * 10 - (int)(arrayPontosOrdenados[i].x * 10)) < 0.1)
+                    fprintf(output, "(%.1f, %.2f) ", arrayPontosOrdenados[i].x, arrayPontosOrdenados[i].y);
+                else if (fabs(arrayPontosOrdenados[i].y * 10 - (int)(arrayPontosOrdenados[i].y * 10)) < 0.1)
+                    fprintf(output, "(%.2f, %.1f) ", arrayPontosOrdenados[i].x, arrayPontosOrdenados[i].y);
+                else
+                    fprintf(output,"(%.2f, %.2f) ", arrayPontosOrdenados[i].x, arrayPontosOrdenados[i].y);
             }
+            // printf("%.2f, ", arrayPontosOrdenados[i].x);           
+            // printf("%.2f\n", arrayPontosOrdenados[i].y);  
         }
         fprintf(output, " distance %.2f shortcut %.2f\n", distance, shortcut);
     }
