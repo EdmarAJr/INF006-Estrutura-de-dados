@@ -46,8 +46,6 @@ float distancia(Ponto p) {
     return sqrt(p.menor * p.menor + p.y * p.y);
 }
 
-#include <string.h>
-
 void ordenarStrings(char strings[][MAX_STR_LEN], int n) {
     for (int i = 0; i < n - 1; i++) {
         int menor = i; 
