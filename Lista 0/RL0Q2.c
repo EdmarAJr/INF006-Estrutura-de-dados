@@ -38,59 +38,76 @@
 #define MAX_STR_LEN 50
 
 typedef struct {
-    float x;
+    float menor;
     float y;
 } Ponto;
 
 float distancia(Ponto p) {
-    return sqrt(p.x * p.x + p.y * p.y);
+    return sqrt(p.menor * p.menor + p.y * p.y);
 }
 
 void ordenarStrings(char strings[][MAX_STR_LEN], int n) {
     for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (strcmp(strings[j], strings[j + 1]) > 0) {
-                char temp[MAX_STR_LEN];
-                strcpy(temp, strings[j]);
-                strcpy(strings[j], strings[j + 1]);
-                strcpy(strings[j + 1], temp);
+        int menor = i; 
+        for (int j = i + 1; j < n; j++) {
+            if (strcmp(strings[j], strings[menor]) < 0) {
+                menor = j;
             }
+        }
+        
+        if (menor != i) {
+            char temp[MAX_STR_LEN];
+            strcpy(temp, strings[i]);
+            strcpy(strings[i], strings[menor]);
+            strcpy(strings[menor], temp);
         }
     }
 }
 
 void ordenarIntegers(int arr[], int n) {
     for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (arr[j] > arr[j + 1]) {
-                int temp = arr[j];
-                arr[j] = arr[j + 1];
-                arr[j + 1] = temp;
+        int menor = i; 
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] < arr[menor]) {
+                menor = j; 
             }
+        }
+        if (menor != i) {
+            int temp = arr[i];
+            arr[i] = arr[menor];
+            arr[menor] = temp;
         }
     }
 }
 
 void ordenarFloats(float arr[], int n) {
     for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (arr[j] > arr[j + 1]) {
-                float temp = arr[j];
-                arr[j] = arr[j + 1];
-                arr[j + 1] = temp;
+        int menor = i; 
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] < arr[menor]) {
+                menor = j; 
             }
+        }
+        if (menor != i) {
+            float temp = arr[i];
+            arr[i] = arr[menor];
+            arr[menor] = temp;
         }
     }
 }
 
 void ordenarPontos(Ponto pontos[], int n) {
     for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (distancia(pontos[j]) > distancia(pontos[j + 1])) {
-                Ponto temp = pontos[j];
-                pontos[j] = pontos[j + 1];
-                pontos[j + 1] = temp;
+        int menor = i; 
+        for (int j = i + 1; j < n; j++) {
+            if (distancia(pontos[j]) < distancia(pontos[menor])) {
+                menor = j; 
             }
+        }
+        if (menor != i) {
+            Ponto temp = pontos[i];
+            pontos[i] = pontos[menor];
+            pontos[menor] = temp;
         }
     }
 }
@@ -117,7 +134,7 @@ int main() {
         while (token != NULL) {
             if (isdigit(token[0]) || token[0] == '-' || token[0] == '(') {
                 if (strchr(token, '(') != NULL) {  
-                    sscanf(token, "(%f,%f)", &pontos[countPontos].x, &pontos[countPontos].y);
+                    sscanf(token, "(%f,%f)", &pontos[countPontos].menor, &pontos[countPontos].y);
                     countPontos++;
                 } else { 
                     char *end;
@@ -157,29 +174,30 @@ int main() {
         
         fprintf(output, " p:");
         for (int i = 0; i < countPontos; i++) {
-            if (pontos[i].x == (int)pontos[i].x && pontos[i].y == (int)pontos[i].y) {
-                fprintf(output, "(%d,%d) ", (int)pontos[i].x, (int)pontos[i].y);
-            } else if (pontos[i].x == (int)pontos[i].x && pontos[i].y == (float)pontos[i].y) {
+            if (pontos[i].menor == (int)pontos[i].menor && pontos[i].y == (int)pontos[i].y) {
+                fprintf(output, "(%d,%d) ", (int)pontos[i].menor, (int)pontos[i].y);
+            } else if (pontos[i].menor == (int)pontos[i].menor && pontos[i].y == (float)pontos[i].y) {
                 if (fabs(pontos[i].y * 10 - (int)(pontos[i].y * 10)) < 0.1)
-                    fprintf(output, "(%d,%.1f) ", (int)pontos[i].x, pontos[i].y);
+                    fprintf(output, "(%d,%.1f) ", (int)pontos[i].menor, pontos[i].y);
                 else
-                    fprintf(output, "(%d,%.2f) ", (int)pontos[i].x, pontos[i].y);
-            } else if (pontos[i].x == (float)pontos[i].x && pontos[i].y == (int)pontos[i].y) {
-                if (fabs(pontos[i].x * 10 - (int)(pontos[i].x * 10)) < 0.1)
-                    fprintf(output, "(%.1f,%d) ", pontos[i].x, (int)pontos[i].y);
+                    fprintf(output, "(%d,%.2f) ", (int)pontos[i].menor, pontos[i].y);
+            } else if (pontos[i].menor == (float)pontos[i].menor && pontos[i].y == (int)pontos[i].y) {
+                if (fabs(pontos[i].menor * 10 - (int)(pontos[i].menor * 10)) < 0.1)
+                    fprintf(output, "(%.1f,%d) ", pontos[i].menor, (int)pontos[i].y);
                 else
-                    fprintf(output, "(%.2f,%d) ", pontos[i].x, (int)pontos[i].y);
+                    fprintf(output, "(%.2f,%d) ", pontos[i].menor, (int)pontos[i].y);
             } else {
-                if (fabs(pontos[i].x * 10 - (int)(pontos[i].x * 10)) < 0.1 && fabs(pontos[i].y * 10 - (int)(pontos[i].y * 10)) < 0.1)
-                    fprintf(output, "(%.1f,%.1f) ", pontos[i].x, pontos[i].y);
-                else if (fabs(pontos[i].x * 10 - (int)(pontos[i].x * 10)) < 0.1)
-                    fprintf(output, "(%.1f,%.2f) ", pontos[i].x, pontos[i].y);
+                if (fabs(pontos[i].menor * 10 - (int)(pontos[i].menor * 10)) < 0.1 && fabs(pontos[i].y * 10 - (int)(pontos[i].y * 10)) < 0.1)
+                    fprintf(output, "(%.1f,%.1f) ", pontos[i].menor, pontos[i].y);
+                else if (fabs(pontos[i].menor * 10 - (int)(pontos[i].menor * 10)) < 0.1)
+                    fprintf(output, "(%.1f,%.2f) ", pontos[i].menor, pontos[i].y);
                 else if (fabs(pontos[i].y * 10 - (int)(pontos[i].y * 10)) < 0.1)
-                    fprintf(output, "(%.2f,%.1f) ", pontos[i].x, pontos[i].y);
+                    fprintf(output, "(%.2f,%.1f) ", pontos[i].menor, pontos[i].y);
                 else
-                    fprintf(output, "(%.2f,%.2f) ", pontos[i].x, pontos[i].y);
+                    fprintf(output, "(%.2f,%.2f) ", pontos[i].menor, pontos[i].y);
             }
         }
+    }
         fprintf(output, "\n");
 
     fclose(input);
