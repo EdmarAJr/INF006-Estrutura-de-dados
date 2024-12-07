@@ -43,120 +43,84 @@ typedef struct ponto {
     float y;
 } Ponto;
 
-void selectionSort(Ponto *A, int tam) {
-    for (int i = 0; i < tam - 1; i++) {
-        int i_menor = i;
-        for (int j = i + 1; j < tam; j++) {
-            if (abs(A[j].x) < abs(A[i_menor].x) ||
-                (abs(A[j].x) == abs(A[i_menor].x) && abs(A[j].y) < abs(A[i_menor].y))) {
-                i_menor = j;
-            }
-        }
-
-        Ponto temp = A[i];
-        A[i] = A[i_menor];
-        A[i_menor] = temp;
-    }
-}
-
-void print(Ponto *A, int tam) {
-    printf("points: ");
-    for (int i = 0; i < tam; i++) {
-        if (A[i].x == (int)A[i].x && A[i].y == (int)A[i].y) {
-            printf("(%d, %d) ", (int)A[i].x, (int)A[i].y);
-        } else if (A[i].x == (int)A[i].x && A[i].y != (int)A[i].y) {
-            printf("(%d, %.2f) ", (int)A[i].x, A[i].y);
-        } else if (A[i].x != (int)A[i].x && (int)A[i].y == (int)A[i].y) {
-            printf("(%.2f, %d) ", A[i].x, (int)A[i].y);
-        } else {
-            printf("(%.2f, %.2f) ", A[i].x, A[i].y);
-        }
-    }
-}    
+void inicializar(FILE *input, FILE *output);
+void ordenarPontos(Ponto *A, int tam);
+void print(Ponto *A, int tam);
 
 int main() {
-    
     FILE *input, *output;
     input = fopen("L0Q1.in", "r");
     output = fopen("L0Q1.out", "w");
-    char line[1000]; 
-
+    
     if (!input || !output) {
         printf("Erro ao abrir os arquivos.\n");
         return 1;
     }
-
-    while (fgets(line, sizeof(line), input) != NULL) {
-        char *token = strtok(line, " ");
-        int count = 0;
-        
-        Ponto arrayPontos[MAX_POINTS], arrayPontosOrdenados[MAX_POINTS];
-
-        if (strcmp(token, "points ") == 0) {
-            token = strtok(NULL, " ");
-        }
-
-        while (token != NULL) {
-            Ponto ponto;
-            if (sscanf(token, "(%f,%f)", &ponto.x, &ponto.y) == 2) {
-                arrayPontos[count] = ponto;
-                arrayPontosOrdenados[count] = ponto;
-                count++;
-            }
-            token = strtok(NULL, " ");
-        }
-        
-        float distance=0, shortcut=0;
     
-        for (int i = 0; i < count-1; i++) {
-            distance += sqrt(pow((arrayPontos[i].x  - arrayPontos[i+1].x), 2) + 
-        pow((arrayPontos[i].y  - arrayPontos[i+1].y), 2));
-        }
-        
-        shortcut = sqrt(pow((arrayPontos[0].x  - arrayPontos[count-1].x), 2) + pow((arrayPontos[0].y  - arrayPontos[count-1].y), 2));
-
-        selectionSort(arrayPontosOrdenados, count);
-    
-        // print(arrayPontosOrdenados, count);
-        // printf("distance %.2f ", distance);
-        // printf("shortcut %.2f ", shortcut);    
-
-        fprintf(output, "points ");
-        for (int i = 0; i < count; i++) {  
-            if (arrayPontosOrdenados[i].x == (int)arrayPontosOrdenados[i].x && arrayPontosOrdenados[i].y == (int)arrayPontosOrdenados[i].y) {
-                // printf("Todos inteiros\n");
-                fprintf(output, "(%d,%d) ", (int)arrayPontosOrdenados[i].x, (int)arrayPontosOrdenados[i].y);
-            } else if (arrayPontosOrdenados[i].x == (int)arrayPontosOrdenados[i].x && arrayPontosOrdenados[i].y == (float)arrayPontosOrdenados[i].y) {
-                // printf("1 inteiro 2 real\n");
-                if (fabs(arrayPontosOrdenados[i].y * 10 - (int)(arrayPontosOrdenados[i].y * 10)) < 0.1)
-                    fprintf(output, "(%d,%.1f) ", (int)arrayPontosOrdenados[i].x, arrayPontosOrdenados[i].y);
-                else
-                    fprintf(output,"(%d,%.2f) ", (int)arrayPontosOrdenados[i].x, arrayPontosOrdenados[i].y);
-            } else if (arrayPontosOrdenados[i].x == (float)arrayPontosOrdenados[i].x && arrayPontosOrdenados[i].y == (int)arrayPontosOrdenados[i].y) {
-                // printf("1 real 2 inteiro\n");
-                if (fabs(arrayPontosOrdenados[i].x * 10 - (int)(arrayPontosOrdenados[i].x * 10)) < 0.1)
-                    fprintf(output, "(%.1f,%d) ", arrayPontosOrdenados[i].x, (int)arrayPontosOrdenados[i].y);
-                else
-                    fprintf(output,"(%.2f,%d) ", arrayPontosOrdenados[i].x, (int)arrayPontosOrdenados[i].y);
-            } else {
-                // printf("Todos reais\n");
-                if (fabs(arrayPontosOrdenados[i].x * 10 - (int)(arrayPontosOrdenados[i].x * 10)) < 0.1 && fabs(arrayPontosOrdenados[i].y * 10 - (int)(arrayPontosOrdenados[i].y * 10)) < 0.1)
-                    fprintf(output, "(%.1f,%.1f) ", arrayPontosOrdenados[i].x, arrayPontosOrdenados[i].y);
-                else if (fabs(arrayPontosOrdenados[i].x * 10 - (int)(arrayPontosOrdenados[i].x * 10)) < 0.1)
-                    fprintf(output, "(%.1f,%.2f) ", arrayPontosOrdenados[i].x, arrayPontosOrdenados[i].y);
-                else if (fabs(arrayPontosOrdenados[i].y * 10 - (int)(arrayPontosOrdenados[i].y * 10)) < 0.1)
-                    fprintf(output, "(%.2f,%.1f) ", arrayPontosOrdenados[i].x, arrayPontosOrdenados[i].y);
-                else
-                    fprintf(output,"(%.2f,%.2f) ", arrayPontosOrdenados[i].x, arrayPontosOrdenados[i].y);
-            }
-            // printf("%.2f, ", arrayPontosOrdenados[i].x);           
-            // printf("%.2f\n", arrayPontosOrdenados[i].y);  
-        }
-        fprintf(output, " distance %.2f shortcut %.2f\n", distance, shortcut);
-    }
+    inicializar(input, output);
 
     fclose(input);
     fclose(output);
 
     return 0;
+}
+
+void inicializar(FILE *input, FILE *output){
+    
+    char line[1000]; 
+    char *outer;
+    char *inner;
+
+
+    while (fgets(line, sizeof(line), input) != NULL) {
+        char *token = strtok_r(line, " ", &outer);
+        int count = 0;
+        
+        Ponto arrP[MAX_POINTS], arrOrd[MAX_POINTS];
+
+        if (strcmp(token, "points ") == 0) {
+            token = strtok_r(NULL, " ", &outer);
+        }
+
+        while (token != NULL) {
+            Ponto p;
+            if (sscanf(outer, "(%f,%f)", &p.x, &p.y) == 2) {
+                arrP[count] = p;
+                arrOrd[count] = p;
+                count++;
+            }
+            token = strtok_r(NULL, " ", &outer);
+        }
+        
+        float distance=0, shortcut=0;
+    
+        for (int i = 0; i < count-1; i++) {
+            distance += sqrt(pow((arrP[i].x  - arrP[i+1].x), 2) + 
+        pow((arrP[i].y  - arrP[i+1].y), 2));
+        }
+        
+        shortcut = sqrt(pow((arrP[0].x  - arrP[count-1].x), 2) + pow((arrP[0].y  - arrP[count-1].y), 2));
+        ordenarPontos(arrOrd, count);
+
+        fprintf(output, "points ");
+        for (int i = 0; i < count; i++) {
+            fprintf(output,"(%g,%g) ", arrOrd[i].x, arrOrd[i].y);
+        }
+        fprintf(output, " distance %.2f shortcut %.2f\n", distance, shortcut);
+    }
+}
+
+void ordenarPontos(Ponto *A, int tam) {
+    for (int i = 1; i < tam; i++) {
+        Ponto key = A[i];
+        int j = i - 1;
+
+        while (j >= 0 && 
+              (abs(A[j].x) > abs(key.x) || 
+              (abs(A[j].x) == abs(key.x) && abs(A[j].y) > abs(key.y)))) {
+            A[j + 1] = A[j];
+            j--;
+        }
+        A[j + 1] = key;
+    }
 }
