@@ -45,7 +45,6 @@ typedef struct ponto {
 
 void inicializar(FILE *input, FILE *output);
 void ordenarPontos(Ponto *A, int tam);
-void print(Ponto *A, int tam);
 
 int main() {
     FILE *input, *output;
