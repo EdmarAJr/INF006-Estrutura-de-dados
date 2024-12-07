@@ -42,8 +42,87 @@ typedef struct {
     float y;
 } Ponto;
 
-float distancia(Ponto p) {
-    return sqrt(p.x * p.x + p.y * p.y);
+void inicializar(FILE *input, FILE *output);
+void ordenarStrings(char strings[][MAX_STR_LEN], int n);
+void ordenarIntegers(int arr[], int n);
+void ordenarFloats(float arr[], int n);
+void ordenarPontos(Ponto *A, int tam);
+
+int main() {
+    FILE *input = fopen("L0Q2.in", "r");
+    FILE *output = fopen("L0Q2.out", "w");
+
+    if (!input || !output) {
+        printf("Erro ao abrir os arquivos.\n");
+        return 1;
+    }
+
+    inicializar(input, output);
+
+    fclose(input);
+    fclose(output);
+
+    return 0;
+}
+
+void inicializar(FILE *input, FILE *output) {
+    char line[1000];
+    char *outer;
+    char *inner;
+
+    while (fgets(line, sizeof(line), input)) {
+        char strings[MAX_ITEMS][MAX_STR_LEN] = {0};
+        int inteiros[MAX_ITEMS] = {0};
+        float reais[MAX_ITEMS] = {0};
+        Ponto pontos[MAX_ITEMS] = {0};
+        int countS = 0, countI = 0, countR = 0, countP = 0;
+
+        line[strcspn(line, "\n")] = '\0';
+        char* token = strtok_r(line, " ", &outer);
+
+        while (token != NULL) {
+            if (isdigit(token[0]) || token[0] == '-' || token[0] == '(') {
+                if (strchr(token, '(')) {
+                    sscanf(token, "(%f,%f)", &pontos[countP].x, &pontos[countP].y);
+                    countP++;
+                } else {
+                    char *end;
+                    float val = strtof(token, &end);
+                    if (*end == '\0') { 
+                        if (strchr(token, '.')) {
+                            reais[countR++] = val;
+                        } else {
+                            inteiros[countI++] = (int)val;
+                        }
+                    }
+                }
+            } else {
+                strcpy(strings[countS++], token);
+            }
+             token = strtok_r(NULL, " ", &outer);
+        }
+
+        ordenarStrings(strings, countS);
+        ordenarIntegers(inteiros, countI);
+        ordenarFloats(reais, countR);
+        ordenarPontos(pontos, countP);
+
+        fprintf(output, "str:");
+        for (int i = 0; i < countS; i++) fprintf(output, "%s ", strings[i]);
+
+        fprintf(output, " int:");
+        for (int i = 0; i < countI; i++) fprintf(output, "%d ", inteiros[i]);
+
+        fprintf(output, " float:");
+        for (int i = 0; i < countR; i++) fprintf(output, "%.2f ", reais[i]);
+
+        fprintf(output, " p:");
+        for (int i = 0; i < countP; i++) {
+            fprintf(output, "(%g,%g) ", pontos[i].x, pontos[i].y);
+        }
+
+        fprintf(output, "\n"); 
+    }
 }
 
 void ordenarStrings(char strings[][MAX_STR_LEN], int n) {
@@ -59,131 +138,45 @@ void ordenarStrings(char strings[][MAX_STR_LEN], int n) {
     }
 }
 
-void ordenarIntegers(int arr[], int n) {
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (arr[j] > arr[j + 1]) {
-                int temp = arr[j];
-                arr[j] = arr[j + 1];
-                arr[j + 1] = temp;
-            }
+void ordenarIntegers(int *arr, int n) {
+    for (int i = 1; i < n; i++) {
+        int key = arr[i];
+        int j = i - 1;
+
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j--;
         }
+
+        arr[j + 1] = key;
     }
 }
 
-void ordenarFloats(float arr[], int n) {
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (arr[j] > arr[j + 1]) {
-                float temp = arr[j];
-                arr[j] = arr[j + 1];
-                arr[j + 1] = temp;
-            }
+void ordenarFloats(float *arr, int n) {
+    for (int i = 1; i < n; i++) {
+        float key = arr[i];
+        int j = i - 1;
+
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j--;
         }
+
+        arr[j + 1] = key;
     }
 }
 
-void ordenarPontos(Ponto pontos[], int n) {
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (distancia(pontos[j]) > distancia(pontos[j + 1])) {
-                Ponto temp = pontos[j];
-                pontos[j] = pontos[j + 1];
-                pontos[j + 1] = temp;
-            }
+void ordenarPontos(Ponto *A, int tam) {
+    for (int i = 1; i < tam; i++) {
+        Ponto key = A[i];
+        int j = i - 1;
+
+        while (j >= 0 && 
+              (abs(A[j].x) > abs(key.x) || 
+              (abs(A[j].x) == abs(key.x) && abs(A[j].y) > abs(key.y)))) {
+            A[j + 1] = A[j];
+            j--;
         }
+        A[j + 1] = key;
     }
-}
-
-int main() {
-    FILE *input = fopen("L0Q2.in", "r");
-    FILE *output = fopen("L0Q2.out", "w");
-
-    if (!input || !output) {
-        printf("Erro ao abrir os arquivos.\n");
-        return 1;
-    }
-
-    char line[1000];
-    while (fgets(line, sizeof(line), input)) {
-        char strings[MAX_ITEMS][MAX_STR_LEN];
-        float reais[MAX_ITEMS];
-        int inteiros[MAX_ITEMS];
-        Ponto pontos[MAX_ITEMS];
-        int countStr = 0, countReais = 0, countInt = 0, countPontos = 0;
-
-        char* token = strtok(line, " ");
-
-        while (token != NULL) {
-            if (isdigit(token[0]) || token[0] == '-' || token[0] == '(') {
-                if (strchr(token, '(') != NULL) {  
-                    sscanf(token, "(%f,%f)", &pontos[countPontos].x, &pontos[countPontos].y);
-                    countPontos++;
-                } else { 
-                    char *end;
-                    float val = strtof(token, &end);
-                    if (*end == '\0' || (*end == 'f' && *(end + 1) == '\0')) {  
-                        if (strchr(token, '.') != NULL) {  
-                            reais[countReais++] = val;
-                        } else {  
-                            inteiros[countInt++] = (int)val;
-                        }
-                    }
-                }
-            } else {
-                strcpy(strings[countStr++], token);
-            }
-            token = strtok(NULL, " ");
-        }
-
-        ordenarStrings(strings, countStr);
-        ordenarIntegers(inteiros, countInt);
-        ordenarFloats(reais, countReais);
-        ordenarPontos(pontos, countPontos);
-        
-        fprintf(output, " str:");
-        for (int i = 0; i < countStr; i++) fprintf(output, " %s", strings[i]);
-        
-        fprintf(output, " int:");
-        for (int i = 0; i < countInt; i++) fprintf(output, " %d", inteiros[i]);
-        
-        fprintf(output, " float:");
-        for (int i = 0; i < countReais; i++) {
-            if (fabs(reais[i] * 10 - (int)(reais[i] * 10)) < 0.1)
-                fprintf(output, " %.1f", reais[i]);
-            else
-                fprintf(output, " %.2f", reais[i]);
-        }  
-        
-        fprintf(output, " p:");
-        for (int i = 0; i < countPontos; i++) {
-            if (pontos[i].x == (int)pontos[i].x && pontos[i].y == (int)pontos[i].y) {
-                fprintf(output, "(%d,%d) ", (int)pontos[i].x, (int)pontos[i].y);
-            } else if (pontos[i].x == (int)pontos[i].x && pontos[i].y == (float)pontos[i].y) {
-                if (fabs(pontos[i].y * 10 - (int)(pontos[i].y * 10)) < 0.1)
-                    fprintf(output, "(%d,%.1f) ", (int)pontos[i].x, pontos[i].y);
-                else
-                    fprintf(output, "(%d,%.2f) ", (int)pontos[i].x, pontos[i].y);
-            } else if (pontos[i].x == (float)pontos[i].x && pontos[i].y == (int)pontos[i].y) {
-                if (fabs(pontos[i].x * 10 - (int)(pontos[i].x * 10)) < 0.1)
-                    fprintf(output, "(%.1f,%d) ", pontos[i].x, (int)pontos[i].y);
-                else
-                    fprintf(output, "(%.2f,%d) ", pontos[i].x, (int)pontos[i].y);
-            } else {
-                if (fabs(pontos[i].x * 10 - (int)(pontos[i].x * 10)) < 0.1 && fabs(pontos[i].y * 10 - (int)(pontos[i].y * 10)) < 0.1)
-                    fprintf(output, "(%.1f,%.1f) ", pontos[i].x, pontos[i].y);
-                else if (fabs(pontos[i].x * 10 - (int)(pontos[i].x * 10)) < 0.1)
-                    fprintf(output, "(%.1f,%.2f) ", pontos[i].x, pontos[i].y);
-                else if (fabs(pontos[i].y * 10 - (int)(pontos[i].y * 10)) < 0.1)
-                    fprintf(output, "(%.2f,%.1f) ", pontos[i].x, pontos[i].y);
-                else
-                    fprintf(output, "(%.2f,%.2f) ", pontos[i].x, pontos[i].y);
-            }
-        }
-        fprintf(output, "\n");
-
-    fclose(input);
-    fclose(output);
-
-    return 0;
 }
