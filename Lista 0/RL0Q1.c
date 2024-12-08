@@ -1,7 +1,11 @@
 /*************************************** 
-* Equipe: Deivisson Vinicius França de Jesus
-*         Edmar Amorim dos Santos Junior
-* 
+* Instituto Federal da Bahia
+* Campus Salvador - BA
+* Curso de Análise e Desenvolvimento de Sistemas http://ads.ifba.edu.br
+* Disciplina: INF006 - Estrutura de dados e algoritmos
+* Docente: José Dihego <josedihego@gmail.com>
+* Discentes: Deivisson Vinicius França de Jesus
+*            Edmar Amorim dos Santos Junior 
 ***************************************/
               
 /**
